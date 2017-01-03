@@ -191,6 +191,16 @@ public interface GenerationConfig {
     boolean isIncludeJsr303Annotations();
 
     /**
+     * Gets the 'includeJsr305Annotations' configuration option.
+     *
+     * @return Whether to include
+     *         <a href="http://jcp.org/en/jsr/detail?id=305">JSR-305</a>
+     *         annotations (for schema rules like Nullable, NonNull, etc) in
+     *         generated Java types.
+     */
+    boolean isIncludeJsr305Annotations();
+
+    /**
      * Gets the 'sourceType' configuration option.
      *
      * @return The type of input documents that will be read
@@ -402,5 +412,13 @@ public interface GenerationConfig {
      *         date-time) to generated Java types.
      */
     String getTimeType();
+    
+    /**
+     * Gets the `formatDateTime` configuration option 
+     *
+     * @return Whether the fields of type <code>date-type</code> have the <code>@JsonFormat</code> annotation 
+     *         with pattern set to the default value of <code>yyyy-MM-dd'T'HH:mm:ss.SSSZ</code> 
+     */
+    boolean isFormatDateTimes();
 
 }

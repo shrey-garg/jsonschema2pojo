@@ -99,6 +99,9 @@ public class Arguments implements GenerationConfig {
     @Parameter(names = { "-303", "--jsr303-annotations" }, description = "Add JSR-303/349 annotations to generated Java types.")
     private boolean includeJsr303Annotations = false;
 
+    @Parameter(names = { "-305", "--jsr305-annotations" }, description = "Add JSR-305 annotations to generated Java types.")
+    private boolean includeJsr305Annotations = false;
+
     @Parameter(names = { "-T", "--source-type" })
     private SourceType sourceType = SourceType.JSONSCHEMA;
 
@@ -147,8 +150,8 @@ public class Arguments implements GenerationConfig {
     @Parameter(names = { "-fe", "--file-extensions" }, description = "The extensions that should be considered as standard filename extensions when creating java class names.")
     private String fileExtensions = "";
 
-    @Parameter(names = { "-D", "--disable-additional-properties" }, description = "Disable additional properties support on generated types, regardless of the input schema(s)")
-    private boolean disableAdditionalProperties = false;
+    @Parameter(names = { "-D", "--enable-additional-properties" }, description = "Enable additional properties support on generated types, regardless of the input schema(s)")
+    private boolean isIncludeAdditionalProperties = false;
 
     @Parameter(names = { "-da", "--disable-accessors" }, description = "Whether to omit getter/setter methods and create public fields instead.")
     private boolean disableAccessors = false;
@@ -158,7 +161,10 @@ public class Arguments implements GenerationConfig {
 
     @Parameter(names = { "-ida", "--include-dynamic-accessors" }, description = "Include dynamic getter, setter, and builder support on generated types.")
     private boolean includeDynamicAccessors = false;
-
+    
+    @Parameter(names = { "-fdt", "--format-date-times" }, description = "Whether the fields of type `date-time` have the `@JsonFormat` annotation with pattern set to the default value of `yyyy-MM-dd'T'HH:mm:ss.SSS` and timezone set to default value of `UTC`")
+    private boolean formatDateTimes = false;
+    
     private static final int EXIT_OKAY = 0;
     private static final int EXIT_ERROR = 1;
 
@@ -265,6 +271,11 @@ public class Arguments implements GenerationConfig {
     }
 
     @Override
+    public boolean isIncludeJsr305Annotations() {
+        return includeJsr305Annotations;
+    }
+
+    @Override
     public SourceType getSourceType() {
         return sourceType;
     }
@@ -350,7 +361,7 @@ public class Arguments implements GenerationConfig {
 
     @Override
     public boolean isIncludeAdditionalProperties() {
-        return disableAdditionalProperties;
+        return isIncludeAdditionalProperties;
     }
 
     @Override
@@ -391,6 +402,11 @@ public class Arguments implements GenerationConfig {
     @Override
     public boolean isUseBigDecimals() {
         return useBigDecimals;
+    }
+
+    @Override
+    public boolean isFormatDateTimes() {
+        return formatDateTimes;
     }
 
 }

@@ -23,6 +23,7 @@ import java.util.Set;
 import com.fasterxml.jackson.annotation.JsonAnyGetter;
 import com.fasterxml.jackson.annotation.JsonAnySetter;
 import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -40,11 +41,15 @@ import com.sun.codemodel.JMethod;
 
 /**
  * Annotates generated Java types using the Jackson 2.x mapping annotations.
- * 
+ *
  * @see <a
  *      href="https://github.com/FasterXML/jackson-annotations">https://github.com/FasterXML/jackson-annotations</a>
  */
 public class Jackson2Annotator extends AbstractAnnotator {
+    
+    public Jackson2Annotator(GenerationConfig generationConfig) {
+        super(generationConfig);
+    }
 
     @Override
     public void propertyOrder(JDefinedClass clazz, JsonNode propertiesNode) {
@@ -69,11 +74,11 @@ public class Jackson2Annotator extends AbstractAnnotator {
 
         if (propertyNode.has("javaJsonView")) {
             field.annotate(JsonView.class).param(
-                "value", field.type().owner().ref(propertyNode.get("javaJsonView").asText()));
+                    "value", field.type().owner().ref(propertyNode.get("javaJsonView").asText()));
         }
 
         if (propertyNode.has("description")) {
-            field.annotate(JsonPropertyDescription.class).param("value", propertyNode.asText());
+            field.annotate(JsonPropertyDescription.class).param("value", propertyNode.get("description").asText());
         }
     }
 
@@ -119,5 +124,30 @@ public class Jackson2Annotator extends AbstractAnnotator {
     @Override
     public void additionalPropertiesField(JFieldVar field, JDefinedClass clazz, String propertyName) {
         field.annotate(JsonIgnore.class);
+    }
+
+    @Override
+    public void dateField(JFieldVar field, JsonNode node) {
+        boolean formatDateTime = getGenerationConfig().isFormatDateTimes();
+        String iso8601DateTimeFormat = "yyyy-MM-dd'T'HH:mm:ss.SSS";
+        String customDateTimePattern = node.has("customDateTimePattern") ? node.get("customDateTimePattern").asText() : null;
+        String timezone = node.has("customTimezone") ? node.get("customTimezone").asText() : "UTC";
+        
+        String pattern = null;
+        
+        // If formatDateTime has been set in the configuration, annotate all date-time fields with iso8601 format
+        if (formatDateTime == true) {
+            pattern = iso8601DateTimeFormat;
+        }
+        
+        // If a custom pattern has been provide, use this to override the iso8601 format
+        if (customDateTimePattern != null) {
+            pattern = customDateTimePattern;
+        }
+        
+        if (pattern != null) {
+            field.annotate(JsonFormat.class).param("shape", JsonFormat.Shape.STRING).param("pattern", pattern).param("timezone", timezone);
+        }
+    
     }
 }

@@ -64,3 +64,8 @@
 * Jonathan Landis
 * Jonathan Ogilvie
 * Sheridan C Rawlins
+* Shrey Garg
+* Stefan M
+* Brendan Haesler
+* Yotam Tanay
+* Shravan Purohit

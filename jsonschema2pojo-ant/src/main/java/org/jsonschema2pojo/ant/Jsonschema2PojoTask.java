@@ -95,6 +95,8 @@ public class Jsonschema2PojoTask extends Task implements GenerationConfig {
 
     private boolean includeJsr303Annotations = false;
 
+    private boolean includeJsr305Annotations = false;
+
     private SourceType sourceType = SourceType.JSONSCHEMA;
 
     private Path classpath;
@@ -138,6 +140,8 @@ public class Jsonschema2PojoTask extends Task implements GenerationConfig {
     private String timeType = null;
 
     private String dateType = null;
+    
+    private boolean formatDateTimes = false;
 
 
     /**
@@ -458,6 +462,19 @@ public class Jsonschema2PojoTask extends Task implements GenerationConfig {
     }
 
     /**
+     * Sets the 'includeJsr305Annotations' property of this class
+     *
+     * @param includeJsr305Annotations
+     *            Whether to include
+     *            <a href="http://jcp.org/en/jsr/detail?id=305">JSR-305</a>
+     *            annotations (for schema rules like Nullable, NonNull, etc) in
+     *            generated Java types.
+     */
+    public void setIncludeJsr305Annotations(boolean includeJsr305Annotations) {
+        this.includeJsr305Annotations = includeJsr305Annotations;
+    }
+
+    /**
      * Sets the 'sourceType' property of this class
      *
      * @param sourceType
@@ -653,6 +670,18 @@ public class Jsonschema2PojoTask extends Task implements GenerationConfig {
     public void setIncludeDynamicAccessors(boolean includeDynamicAccessors) {
         this.includeDynamicAccessors = includeDynamicAccessors;
     }
+    
+    /**
+     * Sets the 'formatDateTimes' property of this class
+     *
+     * @param formatDateTimes
+     *            Whether the fields of type <code>date-type</code> have the <code>@JsonFormat</code> annotation 
+     *            with pattern set to the default value of <code>yyyy-MM-dd'T'HH:mm:ss.SSS</code> 
+     *            and timezone set to default value of `UTC`
+     */
+    public void setFormatDateTime(boolean formatDateTimes) {
+        this.formatDateTimes = formatDateTimes;
+    }
 
     @Override
     public boolean isGenerateBuilders() {
@@ -731,6 +760,11 @@ public class Jsonschema2PojoTask extends Task implements GenerationConfig {
     @Override
     public boolean isIncludeJsr303Annotations() {
         return includeJsr303Annotations;
+    }
+
+    @Override
+    public boolean isIncludeJsr305Annotations() {
+        return includeJsr305Annotations;
     }
 
     @Override
@@ -879,6 +913,11 @@ public class Jsonschema2PojoTask extends Task implements GenerationConfig {
     @Override
     public boolean isUseBigDecimals() {
         return useBigDecimals;
+    }
+
+    @Override
+    public boolean isFormatDateTimes() {
+        return formatDateTimes;
     }
 
 }

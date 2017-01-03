@@ -47,6 +47,7 @@ public class JsonSchemaExtension implements GenerationConfig {
   boolean constructorsRequiredPropertiesOnly
   boolean includeHashcodeAndEquals
   boolean includeJsr303Annotations
+  boolean includeJsr305Annotations
   boolean includeToString
   boolean initializeCollections
   String outputEncoding
@@ -69,6 +70,7 @@ public class JsonSchemaExtension implements GenerationConfig {
   boolean useBigIntegers
   boolean usePrimitives
   FileFilter fileFilter
+  boolean formatDateTimes
 
   public JsonSchemaExtension() {
     // See DefaultGenerationConfig
@@ -89,6 +91,7 @@ public class JsonSchemaExtension implements GenerationConfig {
     customAnnotator = NoopAnnotator.class
     customRuleFactory = RuleFactory.class
     includeJsr303Annotations = false
+    includeJsr305Annotations = false
     sourceType = SourceType.JSONSCHEMA
     outputEncoding = 'UTF-8'
     useJodaDates = false
@@ -109,6 +112,7 @@ public class JsonSchemaExtension implements GenerationConfig {
     includeAccessors = true
     targetVersion = '1.6'
     includeDynamicAccessors = false
+    formatDateTimes = false
   }
 
   @Override
@@ -169,6 +173,7 @@ public class JsonSchemaExtension implements GenerationConfig {
        |customAnnotator = ${customAnnotator.getName()}
        |customRuleFactory = ${customRuleFactory.getName()}
        |includeJsr303Annotations = ${includeJsr303Annotations}
+       |includeJsr305Annotations = ${includeJsr305Annotations}
        |sourceType = ${sourceType.toString().toLowerCase()}
        |removeOldOutput = ${removeOldOutput}
        |outputEncoding = ${outputEncoding}
@@ -185,8 +190,15 @@ public class JsonSchemaExtension implements GenerationConfig {
        |classNamePrefix = ${classNamePrefix}
        |classNameSuffix = ${classNameSuffix}
        |fileExtensions = ${Arrays.toString(fileExtensions)}
+       |includeAccessors = ${includeAccessors}
        |targetVersion = ${targetVersion}
        |includeDynamicAccessors = ${includeDynamicAccessors}
+       |formatDateTimes = ${formatDateTimes}
      """.stripMargin()
   }
+  
+  public boolean isFormatDateTimes() {
+    return formatDateTimes;
+  }
+  
 }

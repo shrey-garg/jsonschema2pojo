@@ -287,6 +287,14 @@ public class Jsonschema2PojoMojo extends AbstractMojo implements GenerationConfi
     private boolean includeJsr303Annotations = false;
 
     /**
+     * Whether to include
+     * <a href="http://jcp.org/en/jsr/detail?id=305">JSR-305</a> annotations
+     * (for schema rules like Nullable, NonNull, etc) in generated Java types.
+     * @since 0.4.8
+     */
+    private boolean includeJsr305Annotations = false;
+
+    /**
      * The type of input documents that will be read
      * <p>
      * Supported values:
@@ -534,6 +542,17 @@ public class Jsonschema2PojoMojo extends AbstractMojo implements GenerationConfi
      * @readonly
      */
     private MavenProject project;
+    
+    /**
+     * Whether the fields of type `date-time` have the `@JsonFormat` annotation 
+     * with pattern set to the default value of `yyyy-MM-dd'T'HH:mm:ss.SSS`
+     * and timezone set to default value of `UTC`
+     *
+     * @parameter expression="${jsonschema2pojo.formatDateTimes}"
+     *            default-value="false"
+     * @since 0.4.29
+     */
+    private boolean formatDateTimes = false;
 
     private FileFilter fileFilter = new AllFileFilter();
 
@@ -555,7 +574,7 @@ public class Jsonschema2PojoMojo extends AbstractMojo implements GenerationConfi
         }
 
         try {
-            new AnnotatorFactory().getAnnotator(getCustomAnnotator());
+            new AnnotatorFactory(this).getAnnotator(getCustomAnnotator());
         } catch (IllegalArgumentException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
@@ -720,6 +739,11 @@ public class Jsonschema2PojoMojo extends AbstractMojo implements GenerationConfi
     }
 
     @Override
+    public boolean isIncludeJsr305Annotations() {
+        return includeJsr305Annotations;
+    }
+
+    @Override
     public SourceType getSourceType() {
         return SourceType.valueOf(sourceType.toUpperCase());
     }
@@ -856,5 +880,10 @@ public class Jsonschema2PojoMojo extends AbstractMojo implements GenerationConfi
     public boolean isUseBigDecimals() {
         return useBigDecimals;
     }
+
+   @Override
+   public boolean isFormatDateTimes() {
+      return formatDateTimes;
+   }
 
 }
